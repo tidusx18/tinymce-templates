@@ -36,6 +36,18 @@ DOMInterface.prototype.addText = function (text, dom, updateActiveDom) {
   return domNode.cloneNode(true);
 };
 
+DOMInterface.prototype.replaceText = function (text, dom, updateActiveDom) {
+  var domNode = this.chainDom(dom, updateActiveDom);
+
+  if (!domNode) {
+    return null;
+  }
+
+  domNode.innerText = text;
+
+  return domNode.cloneNode(true);
+};
+
 /**
   Sets a set of attributes to the DOM Node.
   Part of the set of Mutatable DOM functions.
@@ -61,6 +73,24 @@ DOMInterface.prototype.setAttr = function (attributes, dom, updateActiveDom) {
   return domNode.cloneNode(true);
 };
 
+DOMInterface.prototype.setStyle = function (styles, dom, updateActiveDom) {
+  var domNode = this.chainDom(dom, updateActiveDom);
+  var style;
+  var styleStr = '';
+  if (!domNode) {
+    return null;
+  }
+
+  for (style in styles) {
+    // styleStr += `${style}: ${styles[style]};`;
+    domNode.style[style] = styles[style];
+  }
+  // console.log(styleStr);
+  // domNode.setAttribute('style', styleStr);
+
+  return domNode.cloneNode(true);
+};
+
 /**
   Adds the classes to the DOM Node.
   Part of the set of Mutatable DOM functions.
@@ -78,10 +108,13 @@ DOMInterface.prototype.addClasses = function (classes, dom, updateActiveDom) {
     return null;
   }
 
-  classes.forEach(function (c) {
-    domNode.classList.add(c);
-  });
-
+  if (classes instanceof Array) {
+    classes.forEach(function (c) {
+      domNode.classList.add(c);
+    });
+  } else {
+    domNode.classList.add(classes);
+  }
   return domNode.cloneNode(true);
 };
 
@@ -156,6 +189,24 @@ DOMInterface.prototype.getChild = function (q, i, dom, updateActiveDom) {
   return children[index];
 };
 
+DOMInterface.prototype.deleteChild = function (q, i, dom, updateActiveDom) {
+  var children;
+  var index;
+  var domNode = this.chainDom(dom, updateActiveDom);
+  if (!domNode) {
+    return null;
+  }
+
+  index = i || 0;
+  children = this.getChildren(q, domNode);
+
+  if (index === 0 && (!children || children.length === 0)) {
+    return null;
+  }
+  children[index].remove();
+  return domNode.cloneNode(true);
+};
+
 /**
   @private
   Private helper for the Mutatable DOM functions.
@@ -221,13 +272,13 @@ DOMInterface.prototype.__makeNode__ = function (emmetString, create) {
   };
 
   var tokens = tokenize(emmetString);
-  console.log(tokens);
+  // console.log(tokens);
   var opStack = [];
   var nodeStack = [];
   var dom = null;
   while (tokens.length > 0) {
     var t = tokens.shift();
-    console.log(`token: ${t}`);
+    // console.log(`token: ${t}`);
     var isOp = null;
     var op;
     for (op in ops) {
@@ -240,29 +291,32 @@ DOMInterface.prototype.__makeNode__ = function (emmetString, create) {
       if (opStack.length > 0) {
         if (isOp === '*') {
           // Is multiplication op
-          console.log('Multiplying');
+          // console.log('Multiplying');
           var count = parseInt(tokens.shift());
           var nodes = [];
           var temp = nodeStack.pop();
           var i;
           for (i = 0; i < count; i++) {
             nodes.push(temp.cloneNode(true));
+            // nodeStack.push(temp.cloneNode(true));
+            // opStack.push('+');
           }
+          // nodeStack.push(temp.cloneNode(true));
           nodeStack.push(nodes);
-        } else if (ops[opStack[opStack.length - 1]] >= ops[isOp]) {
+        } else if (opStack.length === 0 || ops[opStack[opStack.length - 1]] <= ops[isOp]) {
           // Peek to see if you can add to op stack
           opStack.push(isOp);
-          console.log(`Adding ${isOp} to opStack`);
+          // console.log(`Adding ${isOp} to opStack`);
         } else {
           // evaluate
           nodeStack.push(this.__evaluateNodeStack__(opStack, nodeStack));
           opStack.push(isOp);
-          console.log(`Adding ${isOp} to opStack post eval`);
-          console.log(`Adding ${nodeStack[nodeStack.length - 1]} to nodeStack`);
+          // console.log(`Adding ${isOp} to opStack post eval`);
+          // console.log(`Adding ${nodeStack[nodeStack.length - 1]} to nodeStack`);
         }
       } else {
         opStack.push(isOp);
-        console.log(`Adding ${isOp} to opStack`);
+        // console.log(`Adding ${isOp} to opStack`);
       }
     } else {
       // Node
@@ -297,7 +351,7 @@ DOMInterface.prototype.__makeNode__ = function (emmetString, create) {
       }
       nodeStack.push(this.__activeDom__.cloneNode(true));
       this.clearActiveDom();
-      console.log(`adding ${nodeStack[nodeStack.length - 1]} to nodeStack`);
+      // console.log(`adding ${nodeStack[nodeStack.length - 1]} to nodeStack`);
     }
   }
 
@@ -314,49 +368,97 @@ DOMInterface.prototype.__makeNode__ = function (emmetString, create) {
   @return {DOM Node} - The resulting DOM Node after evaluating the stacks.
 */
 DOMInterface.prototype.__evaluateNodeStack__ = function (opStack, nodeStack) {
-  console.log('Evaluating stack');
+  // console.log('Evaluating stack');
+  // console.log(opStack, nodeStack);
   var n1;
   var n2;
   var op;
+
   while (opStack.length > 0) {
     n1 = nodeStack.pop();
     op = opStack.pop();
     n2 = nodeStack.pop();
+    // console.log('n1', n1);
+    // console.log(`op: ${op}`);
+    // console.log('n2', n2);
     switch (op) {
       case '>':
         if (n2 instanceof Array) {
-          console.log('n2 is array', n1, n2);
+          // console.log('n2 is array', n1, n2);
           n2 = n2.map(function (item) {
             item.appendChild(n1);
             return item.cloneNode(true);
           });
         } else if (n1 instanceof Array) {
-          console.log('n1 is array', n1, n2);
+          // console.log('n1 is array', n1, n2);
+          var lastChild = n2;
+          while (lastChild.children.length > 0) {
+            lastChild = lastChild.children[lastChild.children.length - 1];
+          }
           n1.forEach(function (item) {
-            n2.appendChild(item);
+            lastChild.appendChild(item.cloneNode(true));
           });
         } else {
-          console.log('neither are arrays', n1, n2);
-          n2.appendChild(n1);
+          // console.log('neither are arrays', n1, n2);
+          // n2.appendChild(n1);
+          var lastChild = n2;
+          while (lastChild.children.length > 0) {
+            lastChild = lastChild.children[lastChild.children.length - 1];
+          }
+          // console.log('last child');
+          // console.log(lastChild);
+
+          lastChild.append(n1);
         }
         nodeStack.push(n2);
         break;
       case '+':
-        var lastChild = n2;
-        while (lastChild.children.length > 0) {
-          lastChild = lastChild.children[lastChild.children.length - 1];
+        // var lastChild = n2;
+        // if (lastChild.parentElement) {
+        //   console.log('has a parent');
+        //   while (lastChild.children.length > 0) {
+        //     lastChild = lastChild.children[lastChild.children.length - 1];
+        //   }
+        //   if (n1 instanceof Array) {
+        //     n1.forEach(function (item) {
+        //       lastChild.parentElement.appendChild(item);
+        //     });
+        //   } else {
+        //     lastChild.parentElement.appendChild(n1);
+        //   }
+        //   nodeStack.push(n2);
+        // } else {
+        //   console.log('no parent');
+        //   if (n1 instanceof Array) {
+        //     nodeStack.push(n1.push(n2));
+        //   } else {
+        //     nodeStack.push([n2, n1]);
+        //   }
+        // }
+        if (n2 instanceof Array) {
+          if (n1 instanceof Array) {
+            n1.forEach(function (item) {
+              n2.push(item);
+            });
+            nodeStack.push(n2);
+          } else {
+            n2.push(n1);
+            nodeStack.push(n2);
+          }
+        } else if (n1 instanceof Array) {
+          n1.unshift(n2);
+          nodeStack.push(n1);
+        } else {
+          nodeStack.push([n2, n1]);
         }
-        lastChild.parentElement.appendChild(n1);
-        nodeStack.push(n2);
         break;
       case '^':
-        break;
-      case '*':
         break;
       default:
     }
   }
 
+  // console.log('result', nodeStack[nodeStack.length - 1]);
   return nodeStack.pop();
 };
 
@@ -375,6 +477,10 @@ DOMInterface.prototype.getUrl = function (link) {
     return link.getAttribute('href');
   }
   return null;
+};
+
+DOMInterface.prototype.getAttr = function (attr, dom) {
+  return dom.getAttribute(attr);
 };
 
 /**
@@ -408,17 +514,17 @@ function tokenize (emmetString) {
   var tokens = emmetString.split(' ');
   for (var i = 0; i < tokens.length; i++) {
     if (tokens[i].includes('{')) {
-      console.log(`Found starting token ${tokens[i]}`);
+      // console.log(`Found starting token ${tokens[i]}`);
       while (tokens.length > i + 1 &&
         !tokens[i].includes('}') &&
         !tokens[i+1].includes('}')) {
-          console.log(`Joining next token ${tokens[i+1]}`);
+          // console.log(`Joining next token ${tokens[i+1]}`);
           tokens[i] = `${tokens[i]} ${tokens.splice(i+1, 1)[0].trim()}`;
-          console.log(`Updated text token ${tokens[i]}`);
+          // console.log(`Updated text token ${tokens[i]}`);
       }
       if (tokens.length > i + 1 && !tokens[i].includes('}')) {
         // Add the last } token
-        console.log(`Joining last token ${tokens[i+1]}`);
+        // console.log(`Joining last token ${tokens[i+1]}`);
         tokens[i] = `${tokens[i]} ${tokens.splice(i+1, 1)[0].trim()}`;
       }
       tokens[i] = tokens[i].trim();
