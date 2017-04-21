@@ -2,30 +2,30 @@ export var iconList = { // Use array instead?
   style_1: {
     title: 'Style 1',
     folder: {
-      title: 'title',
+      title: 'Folder',
       html: 'html'
     },
     assessment: {
-      title: 'title',
+      title: 'Assessment',
       html: 'html'
     },
     assignment: {
-      title: 'title',
+      title: 'Assignment',
       html: 'html'
     },
   },
   style_2: {
     title: 'Style 2',
     folder: {
-      title: 'title',
+      title: 'Folder',
       html: 'html'
     },
     assessment: {
-      title: 'title',
+      title: 'Assessment',
       html: 'html'
     },
     assignment: {
-      title: 'title',
+      title: 'Assignment',
       html: 'html'
     },
   }
