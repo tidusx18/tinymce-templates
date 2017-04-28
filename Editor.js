@@ -4,6 +4,7 @@ import TinymceInterface from './TinyMCE';
 var DOM = new DOMInterface(); // NOTE: Should tinyMCE just inherit DOMInterface?
 var MCE = new TinymceInterface(); // NOTE: Should TextEditor just inherit TinyMCE?
 
+
 function TextEditor(tinymceInstance) {
   this.instance = tinymceInstance;
   this.editorId = escapeCharacters(tinymceInstance.id);
@@ -19,7 +20,7 @@ TextEditor.prototype.buildMenu = function (iconsList) {
     width: '120px',
     'max-width': '120px'
     }, topLevel.querySelector("select"));
-  this.__appendNode__(this.tableRowNode, topLevel);
+  this.__addNode__(this.tableRowNode, topLevel);
 
   var subLevels = this.__buildSublevels__(iconsList);
   subLevels.forEach( function(sublevel) {
@@ -29,26 +30,32 @@ TextEditor.prototype.buildMenu = function (iconsList) {
       'max-width': '120px',
       display:'none'
       }, subMenu.querySelector("select"));
-    this.__appendNode__(this.tableRowNode, subMenu);
+    this.__addNode__(this.tableRowNode, subMenu);
   }, this);
 
   // Add event listeners
+  // NOTE: Clean up event listeners (naming, reuse, etc)
   var that = this; // NOTE: Better way to pass 'this'?
   var topLevelSelect = DOM.getChild('#main-style-select select', 0, this.tableRowNode);
   var submenuSelects = DOM.getChildren('.tinymce-menu', this.tableRowNode);
+  var styleObject = {};
 
-  // NOTE: Make event listener functions? How to handle functions executed on trigger?
+  // NOTE: Make event listener functions?
   topLevelSelect.addEventListener('change', function() {
-    var selectedOptionText = topLevelSelect.item(topLevelSelect.selectedIndex).innerText;
-    that.menuDisplay(selectedOptionText, submenuSelects);
-    console.log(`THAT: `, that); // NOTE: 'that' refers to the main object instance/constructor
-    console.log(`THIS: `, this); // NOTE: 'this' refers to the element that fired the event
+    var topLevelSelectedOption = topLevelSelect.item(topLevelSelect.selectedIndex).innerText;
+    styleObject = that.__searchObject__(iconsList, topLevelSelectedOption);
+    that.toggleDisplayedMenu(topLevelSelectedOption, submenuSelects);
+    // NOTE: Save selection
   });
 
   submenuSelects.forEach( function(subMenu) {
     var select = DOM.getChild(`#${subMenu.id} select`, 0, this.tableRowNode);
     select.addEventListener('change', function() {
-      that.addContent(that.instance);
+      var styleOption = topLevelSelect.item(topLevelSelect.selectedIndex).innerText;
+      var iconTypeOption = select.item(select.selectedIndex).innerText;
+      var iconTypeObject =  that.__searchObject__(styleObject, iconTypeOption);
+      that.__setHtml__( iconTypeObject.html ); //NOTE: Refactor with makeNode?
+      that.__resetSelectMenu__(this);
     });
   }, this);
 };
@@ -80,15 +87,15 @@ TextEditor.prototype.__buildSublevels__ = function (enumerableList) {
 };
 
 // NOTE: Return the appended node for reference?
-TextEditor.prototype.__appendNode__ = function (parentNode, node) {
+TextEditor.prototype.__addNode__ = function (parentNode, node) {
   var lastChild = parentNode.lastChild.cloneNode(true);
   parentNode.removeChild(parentNode.lastChild);
   parentNode.appendChild(node);
   parentNode.appendChild(lastChild);
 };
 
-// NOTE: Refactor menuDisplay to be more reusable? (i.e. can be applied to any menu element)
-TextEditor.prototype.menuDisplay = function (target, nodeList) {
+// NOTE: Refactor toggleDisplayedMenu to be more reusable? (i.e. can be applied to any menu element)
+TextEditor.prototype.toggleDisplayedMenu = function (target, nodeList) {
   for (var node of nodeList) {
     var select = DOM.getChild(`#${node.id} select`, 0, this.tableRowNode);
     if ( node.id.includes( target.replace('Style ', '') ) ) { // NOTE: Determine better condition?
@@ -99,28 +106,53 @@ TextEditor.prototype.menuDisplay = function (target, nodeList) {
   }
 };
 
-TextEditor.prototype.addContent = function (tmceInstance) {
-  // Adds HTML template to tinymce
-  MCE.setContent(tmceInstance, "This is some content...")
+// NOTE: Consolidate repetative vars/simplify if logic
+TextEditor.prototype.__setHtml__ = function (content) {
+  var targetId = 'template-column2';
+  var currentContent = '';
+  if ( MCE.getColumn2(this.instance, targetId) ) {
+    currentContent = MCE.getColumn2(this.instance, targetId).innerHTML;
+    console.log('currentContent: ', currentContent);
+    MCE.setContent(this.instance, content);
+    var targetNode = MCE.getColumn2(this.instance, targetId);
+    // MCE.setHTML(this.instance, targetNode, currentContent); // NOTE: Debug undefined error
+    targetNode.innerHTML = currentContent;
+  } else {
+    currentContent = MCE.getContent(this.instance);
+    console.log('No existing second column.');
+    MCE.setContent(this.instance, content);
+    var targetNode = MCE.getColumn2(this.instance, targetId);
+    // MCE.setHTML(this.instance, targetNode, currentContent);
+    targetNode.innerHTML = currentContent;
+  }
 };
 
-TextEditor.prototype.updateContent = function () {
-  // Updates HTML template in tinymce
+TextEditor.prototype.__searchObject__ = function (object, queryTerm) {
+  for (var key in object) {
+    var value = object[key];
+    if (typeof value === 'Object' && value.title !== queryTerm) {
+      this.searchObject(value);
+    }
+    if (value.title === queryTerm) {
+      return value;
+    }
+  }
 };
 
-TextEditor.prototype.getMenus = function () {
+TextEditor.prototype.__getMenus__ = function () {
   // Gets menu elements that were added to tinymce
 };
 
-TextEditor.prototype.setEventListener = function () { // NOTE: Makes sense as function?
+TextEditor.prototype.__setEventListener__ = function () { // NOTE: Makes sense as function?
   // Adds an event listenser to elements in tinymce
 };
 
-TextEditor.prototype.__resetSelectMenu__ = function () {
+TextEditor.prototype.__resetSelectMenu__ = function (eventOriginNode) {
   // Resets a select menu to display the first/default option
+  eventOriginNode.selectedIndex = 0;
 };
 
-TextEditor.prototype.saveTopLevelSelection = function () {
+TextEditor.prototype.__saveSelectedOption__ = function () {
   // Stores the main select boxe's selection. GM local storage?
 };
 
@@ -135,7 +167,7 @@ TextEditor.prototype.sample = function () {
    var newString = CSS.escape(string);
 
   //  var charactersToEscape= {
-  //    // '\.': '\\.', NOTE: Syntax to include '.' here instead of in separate if statement?
+  //    // '|\.': '\\.', NOTE: Syntax to include '.' here instead of in separate if statement?
   //    '/': '\\/',
   //    '"': '\\"',
   //    "'": "\\'"

@@ -2,7 +2,7 @@ import TinymceInterface from './TinyMCE';
 import Editor from './Editor';
 import { iconList } from './Icons';
 
-setTimeout(function() {
+setTimeout(function() { // NOTE: Use mutationObserver
   var MCE = new TinymceInterface();
   var instances = MCE.getInstances();
   var icons = iconList;
@@ -14,6 +14,4 @@ setTimeout(function() {
     editor.buildMenu(icons);
     // editor.setEventListener();
   });
-
-
 }, 2000);
