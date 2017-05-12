@@ -3,54 +3,36 @@ export var iconList = { // Use array instead?
     title: 'Style 1',
     folder: {
       title: 'Folder',
-      html: `<div style="width: 30%; float: left;">
-            <p></p></div>
-            <div style="width: 30%; float: left;">
-            <p id="template-column2">Second column</p>
-            </div>`
+      iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/465b2b5d-9184-4da2-adbf-982d810083cb/source.png',
+      defaultHTML: '<p>Some default text...</p>'
     },
     assessment: {
       title: 'Assessment',
-      html: `<div style="width: 30%; float: left;">
-            <p>Assessment Icon</p></div>
-            <div style="width: 30%; float: left;">
-            <p id="template-column2">Second column</p>
-            </div>`
+      iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/465b2b5d-9184-4da2-adbf-982d810083cb/source.png',
+      defaultHTML: '<p>Some default text...</p>'
     },
     assignment: {
       title: 'Assignment',
-      html: `<div style="width: 30%; float: left;">
-            <p>Assignment Icon</p></div>
-            <div style="width: 30%; float: left;">
-            <p id="template-column2">Second column</p>
-            </div>`
+      iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/465b2b5d-9184-4da2-adbf-982d810083cb/source.png',
+      defaultHTML: '<p>Some default text...</p>'
     },
   },
   style_2: {
     title: 'Style 2',
     folder: {
       title: 'Folder',
-      html: `<div style="width: 30%; float: left;">
-            <p>Folder Icon</p></div>
-            <div style="width: 30%; float: left;">
-            <p id="template-column2">Second column</p>
-            </div>`
+      iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/465b2b5d-9184-4da2-adbf-982d810083cb/source.png',
+      defaultHTML: '<p>Some default text...</p>'
     },
     assessment: {
       title: 'Assessment',
-      html: `<div style="width: 30%; float: left;">
-            <p>Assessment Icon</p></div>
-            <div style="width: 30%; float: left;">
-            <p id="template-column2">Second column</p>
-            </div>`
+      iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/465b2b5d-9184-4da2-adbf-982d810083cb/source.png',
+      defaultHTML: '<p>Some default text...</p>'
     },
     assignment: {
       title: 'Assignment',
-      html: `<div style="width: 30%; float: left;">
-            <p>Assignment Icon</p></div>
-            <div style="width: 30%; float: left;">
-            <p id="template-column2">Second column</p>
-            </div>`
+      iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/465b2b5d-9184-4da2-adbf-982d810083cb/source.png',
+      defaultHTML: '<p>Some default text...</p>'
     },
   }
 };

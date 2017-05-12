@@ -30,4 +30,9 @@ TinymceInterface.prototype.getColumn2 = function (instance, domId) {
   }
 };
 
+TinymceInterface.prototype.isEmpty = function (instance) {
+  var root = instance.dom.getRoot();
+  return instance.dom.isEmpty(root);
+};
+
 export default TinymceInterface;

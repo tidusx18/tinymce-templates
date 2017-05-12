@@ -13,10 +13,10 @@ function TextEditor(tinymceInstance) {
   // NOTE: Add constants/disctionary?
 }
 
-// NOTE: Make a "Menu building" object/class? Separate this more granular functions?
+// NOTE: Make a "Menu building" object/class?
 TextEditor.prototype.buildMenu = function (iconsList) {
   var topLevel = DOM.makeNode( this.__buildToplevel__(iconsList) );
-  DOM.setStyle({ // NOTE: Make reusable "Styles" object?
+  DOM.setStyle({ // NOTE: Make reusable "Styles" constants?
     width: '120px',
     'max-width': '120px'
     }, topLevel.querySelector("select"));
@@ -45,7 +45,7 @@ TextEditor.prototype.buildMenu = function (iconsList) {
     var topLevelSelectedOption = topLevelSelect.item(topLevelSelect.selectedIndex).innerText;
     styleObject = that.__searchObject__(iconsList, topLevelSelectedOption);
     that.toggleDisplayedMenu(topLevelSelectedOption, submenuSelects);
-    // NOTE: Save selection
+    setToStorage('topLevelSelect', topLevelSelect.selectedIndex);
   });
 
   submenuSelects.forEach( function(subMenu) {
@@ -54,30 +54,32 @@ TextEditor.prototype.buildMenu = function (iconsList) {
       var styleOption = topLevelSelect.item(topLevelSelect.selectedIndex).innerText;
       var iconTypeOption = select.item(select.selectedIndex).innerText;
       var iconTypeObject =  that.__searchObject__(styleObject, iconTypeOption);
-      that.__setHtml__( iconTypeObject.html ); //NOTE: Refactor with makeNode?
+      that.__setHtml__( iconTypeObject ); //NOTE: Refactor with makeNode?
       that.__resetSelectMenu__(this);
     });
   }, this);
+
+  setSelection('topLevelSelect', topLevel.querySelector('select'));
 };
 
-TextEditor.prototype.__buildToplevel__ = function (enumerableList) {
+TextEditor.prototype.__buildToplevel__ = function (optionsList) {
   var emmetString = 'td#main-style-select > select.mceNativeListBox > option {Select a Style}';
-  for (var item in enumerableList) { // First level
-    if ( typeof enumerableList[item] === "object" ) {
-      emmetString += ` + option {${enumerableList[item].title}}`; // Note blank space at start of String
+  for (var item in optionsList) { // First level
+    if ( typeof optionsList[item] === "object" ) {
+      emmetString += ` + option {${optionsList[item].title}}`; // Note blank space at start of String
     }
   }
   return emmetString;
 };
 
-TextEditor.prototype.__buildSublevels__ = function (enumerableList) {
+TextEditor.prototype.__buildSublevels__ = function (optionsList) {
   var emmetStringList = [];
-  for (var item in enumerableList) { // First level
+  for (var item in optionsList) { // First level
     var emmetString = `td#${item}-select.tinymce-menu > select.mceNativeListBox > option {Select an Icon}`;
-    if ( typeof enumerableList[item] === "object" ) {
-      for (var subItem in enumerableList[item]) { // Second level
-        if ( typeof enumerableList[item][subItem] === "object" ) {
-          emmetString += ` + option {${enumerableList[item][subItem].title}}`; // Note blank space at start of String
+    if ( typeof optionsList[item] === "object" ) {
+      for (var subItem in optionsList[item]) { // Second level
+        if ( typeof optionsList[item][subItem] === "object" ) {
+          emmetString += ` + option {${optionsList[item][subItem].title}}`; // Note blank space at start of String
         }
       }
     }
@@ -95,10 +97,10 @@ TextEditor.prototype.__addNode__ = function (parentNode, node) {
 };
 
 // NOTE: Refactor toggleDisplayedMenu to be more reusable? (i.e. can be applied to any menu element)
-TextEditor.prototype.toggleDisplayedMenu = function (target, nodeList) {
-  for (var node of nodeList) {
-    var select = DOM.getChild(`#${node.id} select`, 0, this.tableRowNode);
-    if ( node.id.includes( target.replace('Style ', '') ) ) { // NOTE: Determine better condition?
+TextEditor.prototype.toggleDisplayedMenu = function (target, menus) {
+  for (var menu of menus) {
+    var select = DOM.getChild(`#${menu.id} select`, 0, this.tableRowNode);
+    if ( menu.id.includes( target.replace('Style ', '') ) ) { // NOTE: Determine better condition?
       DOM.setStyle({display: 'block'}, select);
     } else {
       DOM.setStyle({display: 'none'}, select);
@@ -110,21 +112,31 @@ TextEditor.prototype.toggleDisplayedMenu = function (target, nodeList) {
 TextEditor.prototype.__setHtml__ = function (content) {
   var targetId = 'template-column2';
   var currentContent = '';
+
   if ( MCE.getColumn2(this.instance, targetId) ) {
+    console.log('Col 2 exists.');
     currentContent = MCE.getColumn2(this.instance, targetId).innerHTML;
-    console.log('currentContent: ', currentContent);
-    MCE.setContent(this.instance, content);
-    var targetNode = MCE.getColumn2(this.instance, targetId);
-    // MCE.setHTML(this.instance, targetNode, currentContent); // NOTE: Debug undefined error
-    targetNode.innerHTML = currentContent;
-  } else {
-    currentContent = MCE.getContent(this.instance);
-    console.log('No existing second column.');
-    MCE.setContent(this.instance, content);
-    var targetNode = MCE.getColumn2(this.instance, targetId);
-    // MCE.setHTML(this.instance, targetNode, currentContent);
-    targetNode.innerHTML = currentContent;
   }
+  else if ( !MCE.getColumn2(this.instance, targetId) && !MCE.isEmpty(this.instance) ) {
+    console.log('Col 2 does not exist, but there is content.');
+    currentContent = MCE.getContent(this.instance);
+  }
+  else if ( MCE.isEmpty(this.instance) ) {
+    console.log('Editor is empty.');
+    currentContent = content.defaultHTML;
+  }
+
+  var htmlTemplate =
+  `<div id="template-column1" style="width: auto; text-align: center; float: left;">
+  <img style="max-width: 100px;" src="${content.iconSrc}"/>
+  </div>
+  <div id="template-column2" style="width: 50%; padding-top: 15px; float: left;">
+  ${currentContent}
+  </div>`
+
+  MCE.setContent(this.instance, htmlTemplate);
+  var targetNode = MCE.getColumn2(this.instance, targetId);
+  targetNode.innerHTML = currentContent;
 };
 
 TextEditor.prototype.__searchObject__ = function (object, queryTerm) {
@@ -152,9 +164,9 @@ TextEditor.prototype.__resetSelectMenu__ = function (eventOriginNode) {
   eventOriginNode.selectedIndex = 0;
 };
 
-TextEditor.prototype.__saveSelectedOption__ = function () {
-  // Stores the main select boxe's selection. GM local storage?
-};
+// TextEditor.prototype.__saveSelectedOption__ = function () {
+//   // Stores the main select boxe's selection. GM local storage?
+// };
 
 TextEditor.prototype.sample = function () {
   //
@@ -186,5 +198,22 @@ TextEditor.prototype.sample = function () {
 
    return newString;
  }
+
+// NOTE: Import from library and remove set/get below before pushing to dev repo
+function setToStorage(key, value) {
+  GM_setValue(key, value);
+  console.log('Selection saved: ', key, value);
+}
+
+function getFromStorage(key) {
+  return GM_getValue(key, null);
+}
+
+function setSelection(key, selectBox) {
+  if( getFromStorage(key) ) {
+    selectBox.selectedIndex = getFromStorage(key);
+    selectBox.dispatchEvent(new Event('change'));
+  }
+}
 
 export default TextEditor;
