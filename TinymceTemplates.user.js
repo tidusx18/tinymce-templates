@@ -2,7 +2,7 @@
 // @name         Blackboard Editor HTML Templates
 // @namespace    https://github.com/redice44
 // @supportURL   https://github.com/redice44/bb-util-scripts/issues
-// @version      0.1.1
+// @version      0.1.2
 // @description  Adds two selectbox (dropdown) menus to all Blackboard TinyMCE editors with pre-defined HTML templates.
 // @author       Daniel Victoriano <victoriano518@gmail.com>
 // @match        https://fiu.blackboard.com/*
@@ -188,6 +188,12 @@ var iconList = { // Select array instead?
           <ul>
           <li style="margin-bottom: 1em;"><strong>Modules 1 - 15</strong></li>
           </ul>`
+      },
+      reading: {
+        title: 'Required Reading',
+        altText: 'Required Reading',
+        iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Read.png',
+        defaultHTML: `<p>Read the following: </p>`
       },
       week1: {
         title: 'Week 1',
