@@ -1,15 +1,10 @@
 // ==UserScript==
-// @name         Blackboard Editor HTML Templates
-// @namespace    https://github.com/redice44
-// @source       https://github.com/redice44/bb-util-scripts/dist/chrome/icon-templates.user.js
-// @updateURL    https://github.com/redice44/bb-util-scripts/dist/chrome/icon-templates.user.js
-// @supportURL   https://github.com/redice44/bb-util-scripts/issues
+// @name         Canvas HTML Templates
 // @version      0.1.3
-// @description  Adds two selectbox (dropdown) menus to all Blackboard TinyMCE editors with pre-defined HTML templates.
+// @description  Adds two selectbox (dropdown) menus to Canvas TinyMCE editors with pre-defined HTML templates.
 // @author       Daniel Victoriano <victoriano518@gmail.com>
-// @match        https://fiu.blackboard.com/*
-
-// @run-at       document-idle
+// @match        https://fiu.instructure.com/*
+// @grant        none
 // @noframes
 
 // ==/UserScript==
@@ -764,12 +759,14 @@ TinymceInterface.prototype.isEmpty = function (instance) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return iconList; });
+// regex /title: '[^Style](.+)'/ig
+
 var iconList = { // Use array instead?
     style_1: {
         title: 'Style 1',
         weeklyOverview: {
-            title: 'Weekly Overview',
-            altText: 'Weekly Overview',
+            title: 'Image of Weekly Overview Icon',
+            altText: 'Image of Weekly Overview Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Read.png',
             defaultHTML: `
           ​<p><strong>Overview:</strong></p>
@@ -780,44 +777,44 @@ var iconList = { // Use array instead?
             customStyles: `border: 9px solid #0f2089; width: 889px; height: auto; padding: 20px 0 0 20px;`
         },
         discussion: {
-            title: 'Discussion',
-            altText: 'Discussion',
+            title: 'Image of Discussion Icon',
+            altText: 'Image of Discussion Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Discuss.png',
             defaultHTML: ``
         },
         information: {
-            title: 'Information',
-            altText: 'Information | Read',
+            title: 'Image of Information Icon',
+            altText: 'Image of Information | Read Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Read.png',
             defaultHTML: ``
         },
         assessment: {
-            title: 'Assessment',
-            altText: 'Assessment',
+            title: 'Image of Assessment Icon',
+            altText: 'Image of Assessment Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Submit.png',
             defaultHTML: `<p>Select the link above or on the "Assessments" portion of the course menu to the left of the screen in order to complete your assessment by its due date noted in the syllabus.</p>`
         },
         assignment: {
-            title: 'Assignment',
-            altText: 'Assignment',
+            title: 'Image of Assignment Icon',
+            altText: 'Image of Assignment Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Review.png',
             defaultHTML: `<p>Select the link above or on the "Assignment Dropbox" link on the course menu to the left of the screen in order to submit your post by the due date noted in the syllabus.</p>`
         },
         adobeconnect: {
-            title: 'Adobe Connect',
-            altText: 'Adobe Connect',
+            title: 'Image of Adobe Connect Icon',
+            altText: 'Image of Adobe Connect Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Watch.png',
             defaultHTML: `<p>Select the link above to be directed to the “<strong>Adobe Connect</strong>” section of the course. There you will have access to the scheduled Adobe Connect session.</p>`
         },
         pearson: {
-            title: 'Pearson',
-            altText: 'Pearson Resources',
+            title: 'Image of Pearson Icon',
+            altText: 'Image of Pearson Resources Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Pearson%20MyComLab.png',
             defaultHTML: ``
         },
         youseeu: {
-            title: 'YouSeeU Generic Assignment',
-            altText: 'YouSeeU Assignment',
+            title: 'Image of YouSeeU Generic Assignment icon',
+            altText: 'Image of YouSeeU Assignment icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/af6e6b24-6633-467a-a4ed-4a85ecaa1764/source.png',
             defaultHTML: `
           <p>The link above will take you to&nbsp;YouSeeU.</p>
@@ -826,8 +823,8 @@ var iconList = { // Use array instead?
           `
         },
         youseeu: {
-            title: 'YouSeeU Blank Content',
-            altText: 'YouSeeU Assignment',
+            title: 'Image of YouSeeU Blank Content icon',
+            altText: 'Image of YouSeeU Assignment icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/af6e6b24-6633-467a-a4ed-4a85ecaa1764/source.png',
             defaultHTML: ``
         }
@@ -835,128 +832,128 @@ var iconList = { // Use array instead?
     style_2: {
         title: 'Style 2',
         week1: {
-            title: 'Week 1',
-            altText: 'Week 1 Content',
+            title: 'Image of Week 1 Icon',
+            altText: 'Image of Week 1 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Week%201.jpg',
             defaultHTML: `
           <p><strong>Module available from</strong></p>
           <p><b>Topics Covered</b>:</p>`
         },
         week2: {
-            title: 'Week 2',
-            altText: 'Week 2 Content',
+            title: 'Image of Week 2 Icon',
+            altText: 'Image of Week 2 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Week%202.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
       <p><b>Topics Covered</b>:</p>`
         },
         week3: {
-            title: 'Week 3',
-            altText: 'Week 3 Content',
+            title: 'Image of Week 3 Icon',
+            altText: 'Image of Week 3 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Week%203.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
       <p><b>Topics Covered</b>:</p>`
         },
         week4: {
-            title: 'Week 4',
-            altText: 'Week 4 Content',
+            title: 'Image of Week 4 Icon',
+            altText: 'Image of Week 4 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Week%204.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
       <p><b>Topics Covered</b>:</p>`
         },
         week5: {
-            title: 'Week 5',
-            altText: 'Week 5 Content',
+            title: 'Image of Week 5 Icon',
+            altText: 'Image of Week 5 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Week%205.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
       <p><b>Topics Covered</b>:</p>`
         },
         week6: {
-            title: 'Week 6',
-            altText: 'Week 6 Content',
+            title: 'Image of Week 6 Icon',
+            altText: 'Image of Week 6 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Week%206.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
       <p><b>Topics Covered</b>:</p>`
         },
         week7: {
-            title: 'Week 7',
-            altText: 'Week 7 Content',
+            title: 'Image of Week 7 Icon',
+            altText: 'Image of Week 7 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Week%207.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
       <p><b>Topics Covered</b>:</p>`
         },
         week8: {
-            title: 'Week 8',
-            altText: 'Week 8 Content',
+            title: 'Image of Week 8 Icon',
+            altText: 'Image of Week 8 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Week%208.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
       <p><b>Topics Covered</b>:</p>`
         },
         week9: {
-            title: 'Week 9',
-            altText: 'Week 9 Content',
+            title: 'Image of Week 9 Icon',
+            altText: 'Image of Week 9 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Week%209.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
       <p><b>Topics Covered</b>:</p>`
         },
         week10: {
-            title: 'Week 10',
-            altText: 'Week 10 Content',
+            title: 'Image of Week 10 Icon',
+            altText: 'Image of Week 10 Content Icon',
             iconSrc: 'http://vivomedia.fiu.edu/565c6ef653560/Week%2010.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
       <p><b>Topics Covered</b>:</p>`
         },
         week11: {
-            title: 'Week 11',
-            altText: 'Week 11 Content',
+            title: 'Image of Week 11 Icon',
+            altText: 'Image of Week 11 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Week%2011.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
       <p><b>Topics Covered</b>:</p>`
         },
         week12: {
-            title: 'Week 12',
-            altText: 'Week 12 Content',
+            title: 'Image of Week 12 Icon',
+            altText: 'Image of Week 12 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Week%2012.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
       <p><b>Topics Covered</b>:</p>`
         },
         week13: {
-            title: 'Week 13',
-            altText: 'Week 13 Content',
+            title: 'Image of Week 13 Icon',
+            altText: 'Image of Week 13 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Week%2013.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
       <p><b>Topics Covered</b>:</p>`
         },
         week14: {
-            title: 'Week 14',
-            altText: 'Week 14 Content',
+            title: 'Image of Week 14 Icon',
+            altText: 'Image of Week 14 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Week%2014.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
       <p><b>Topics Covered</b>:</p>`
         },
         week15: {
-            title: 'Week 15',
-            altText: 'Week 15 Content',
+            title: 'Image of Week 15 Icon',
+            altText: 'Image of Week 15 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Week%2015.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
       <p><b>Topics Covered</b>:</p>`
         },
         week16: {
-            title: 'Week 16',
-            altText: 'Week 16 Content',
+            title: 'Image of Week 16 Icon',
+            altText: 'Image of Week 16 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Week%2016.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
@@ -966,128 +963,128 @@ var iconList = { // Use array instead?
     style_3: {
         title: 'Style 3',
         module1: {
-            title: 'Module 1',
-            altText: 'Module 1 Content',
+            title: 'Image of Module 1 Icon',
+            altText: 'Image of Module 1 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Module01_speech_bubble.jpg',
             defaultHTML: `
           <p><strong>Module available from</strong></p>
           <p><b>Topics Covered</b>:</p>`
         },
         module2: {
-            title: 'Module 2',
-            altText: 'Module 2 Content',
+            title: 'Image of Module 2 Icon',
+            altText: 'Image of Module 2 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Module02_speech_bubble.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
       <p><b>Topics Covered</b>:</p>`
         },
         module3: {
-            title: 'Module 3',
-            altText: 'Module 3 Content',
+            title: 'Image of Module 3 Icon',
+            altText: 'Image of Module 3 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Module03_speech_bubble.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
       <p><b>Topics Covered</b>:</p>`
         },
         module4: {
-            title: 'Module 4',
-            altText: 'Module 4 Content',
+            title: 'Image of Module 4 Icon',
+            altText: 'Image of Module 4 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Module04_speech_bubble.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
       <p><b>Topics Covered</b>:</p>`
         },
         module5: {
-            title: 'Module 5',
-            altText: 'Module 5 Content',
+            title: 'Image of Module 5 Icon',
+            altText: 'Image of Module 5 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Module05_speech_bubble.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
       <p><b>Topics Covered</b>:</p>`
         },
         module6: {
-            title: 'Module 6',
-            altText: 'Module 6 Content',
+            title: 'Image of Module 6 Icon',
+            altText: 'Image of Module 6 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Module06_speech_bubble.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
       <p><b>Topics Covered</b>:</p>`
         },
         module7: {
-            title: 'Module 7',
-            altText: 'Module 7 Content',
+            title: 'Image of Module 7 Icon',
+            altText: 'Image of Module 7 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Module07_speech_bubble.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
       <p><b>Topics Covered</b>:</p>`
         },
         module8: {
-            title: 'Module 8',
-            altText: 'Module 8 Content',
+            title: 'Image of Module 8 Icon',
+            altText: 'Image of Module 8 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Module08_speech_bubble.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
       <p><b>Topics Covered</b>:</p>`
         },
         module9: {
-            title: 'Module 9',
-            altText: 'Module 9 Content',
+            title: 'Image of Module 9 Icon',
+            altText: 'Image of Module 9 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Module09_speech_bubble.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
       <p><b>Topics Covered</b>:</p>`
         },
         module10: {
-            title: 'Module 10',
-            altText: 'Module 10 Content',
+            title: 'Image of Module 10 Icon',
+            altText: 'Image of Module 10 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Module10_speech_bubble.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
       <p><b>Topics Covered</b>:</p>`
         },
         module11: {
-            title: 'Module 11',
-            altText: 'Module 11 Content',
+            title: 'Image of Module 11 Icon',
+            altText: 'Image of Module 11 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Module11_speech_bubble.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
       <p><b>Topics Covered</b>:</p>`
         },
         module12: {
-            title: 'Module 12',
-            altText: 'Module 12 Content',
+            title: 'Image of Module 12 Icon',
+            altText: 'Image of Module 12 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Module12_speech_bubble.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
       <p><b>Topics Covered</b>:</p>`
         },
         module13: {
-            title: 'Module 13',
-            altText: 'Module 13 Content',
+            title: 'Image of Module 13 Icon',
+            altText: 'Image of Module 13 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Module13_speech_bubble.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
       <p><b>Topics Covered</b>:</p>`
         },
         module14: {
-            title: 'Module 14',
-            altText: 'Module 14 Content',
+            title: 'Image of Module 14 Icon',
+            altText: 'Image of Module 14 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Module14_speech_bubble.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
       <p><b>Topics Covered</b>:</p>`
         },
         module15: {
-            title: 'Module 15',
-            altText: 'Module 15 Content',
+            title: 'Image of Module 15 Icon',
+            altText: 'Image of Module 15 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Module15_speech_bubble.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
       <p><b>Topics Covered</b>:</p>`
         },
         module16: {
-            title: 'Module 16',
-            altText: 'Module 16 Content',
+            title: 'Image of Module 16 Icon',
+            altText: 'Image of Module 16 Content Icon',
             iconSrc: 'https://s3.amazonaws.com/vivomedia.fiu.edu/565c6ef653560/Module16_speech_bubble.jpg',
             defaultHTML: `
       <p><strong>Module available from</strong></p>
