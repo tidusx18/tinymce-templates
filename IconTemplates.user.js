@@ -4,7 +4,7 @@
 // @source       https://github.com/redice44/bb-util-scripts/dist/chrome/icon-templates.user.js
 // @updateURL    https://github.com/redice44/bb-util-scripts/dist/chrome/icon-templates.user.js
 // @supportURL   https://github.com/redice44/bb-util-scripts/issues
-// @version      0.1.0
+// @version      0.1.3
 // @description  Adds two selectbox (dropdown) menus to all Blackboard TinyMCE editors with pre-defined HTML templates.
 // @author       Daniel Victoriano <victoriano518@gmail.com>
 // @match        https://fiu.blackboard.com/*
